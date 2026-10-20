@@ -47,12 +47,12 @@ LISTEN   0        128          127.0.0.1:55000       0.0.0.0:*      wazuh-apid
 Puedes ejecutar el asistente directamente en cualquier servidor Linux remoto:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/k1r0x/pretty-ssh/main/pretty_ssh.py | python3
+curl -sSL https://raw.githubusercontent.com/KyyroxxX/pretty-ssh/main/pretty_ssh.py | python3
 ```
 
 O especificando el nombre del host directamente:
 ```bash
-curl -sSL https://raw.githubusercontent.com/k1r0x/pretty-ssh/main/pretty_ssh.py | python3 - -n wr-wazuh
+curl -sSL https://raw.githubusercontent.com/KyyroxxX/pretty-ssh/main/pretty_ssh.py | python3 - -n wr-wazuh
 ```
 
 ---
@@ -61,7 +61,7 @@ curl -sSL https://raw.githubusercontent.com/k1r0x/pretty-ssh/main/pretty_ssh.py 
 
 1. **Descarga el script:**
    ```bash
-   wget -O pretty_ssh.py https://raw.githubusercontent.com/k1r0x/pretty-ssh/main/pretty_ssh.py
+   wget -O pretty_ssh.py https://raw.githubusercontent.com/KyyroxxX/pretty-ssh/main/pretty_ssh.py
    chmod +x pretty_ssh.py
    ```
 
