@@ -1,15 +1,12 @@
-# 🚀 PrettySSH — Cloud & DevSecOps SSH Terminal Enhancer
+# PrettySSH
 
-[![Python](https://img.shields.io/badge/Python-3.6+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![Platform](https://img.shields.io/badge/Platform-Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)](https://www.kernel.org/)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-[![Zero-Dependencies](https://img.shields.io/badge/Dependencies-Zero%20(Pure%20Stdlib)-blueviolet?style=for-the-badge)]()
+A zero-dependency Python utility designed to configure and standardize SSH terminal environments on remote Linux hosts (Ubuntu, Debian, Arch, RHEL, CentOS).
 
-**PrettySSH** es una herramienta ligera y automatizada en Python diseñada para transformar cualquier terminal SSH recién desplegada (en AWS, Azure, GCP o VPS local) en un entorno de trabajo profesional, cómodo y visualmente impecable estilo **DevSecOps / Arch Linux**.
+PrettySSH solves common terminal emulation issues (`TERM` mismatches, broken `Ctrl+L` screen clearing, cursor desynchronization in `nano`/`vim`), enforces dynamic host and IPv4 visibility in a clean two-line prompt, and configures history search and productivity shortcuts.
 
 ---
 
-## 📸 Vista Previa del Terminal
+## Terminal Preview
 
 ```text
 ┌──[ubuntu@wr-wazuh (10.0.31.10)]-[/var/ossec]
@@ -23,111 +20,90 @@ LISTEN   0        128          127.0.0.1:55000       0.0.0.0:*      wazuh-apid
 
 ---
 
-## ✨ Características Principales
+## Technical Specifications
 
-* 🎯 **Solución nativa para `Ctrl + L` y editores:** Exporta `TERM=xterm-256color`, resolviendo los habituales fallos de desalineación de cursor, cortes al limpiar pantalla (`Ctrl+L`) o visualización defectuosa en `nano`, `vim` y `htop`.
-* 🌐 **Prompt en 2 líneas con IP dinámica:** Muestra siempre el usuario, nombre de máquina y la **IP privada del servidor entre paréntesis** `($IP_LOCAL)`, evitando confusiones al administrar múltiples servidores en arquitecturas segmentadas.
-* 🔍 **Búsqueda inteligente en el historial con flechas:** Permite teclear el comienzo de un comando (ej. `sudo`, `ping` o `docker`) y pulsar `↑` / `↓` para autocompletar únicamente los comandos coincidentes del historial.
-* ⚡ **Aliases de alta productividad preconfigurados:**
-  * `ll` → Lista directorios primero, con tamaños legibles (`-h`) y colores.
-  * `ports` → Muestra todos los sockets TCP/UDP escuchando en el sistema (`sudo ss -tulpn`).
-  * `myip` → Resumen claro de interfaces de red e IPs asignadas (`ip -br a`).
-  * `cls` → Limpieza rápida de terminal.
-* 🛡️ **Seguro, Idempotente y Reversible:**
-  * Genera automáticamente una copia de seguridad timestamped de tu `~/.bashrc` antes de tocar nada.
-  * Se puede ejecutar múltiples veces sin duplicar bloques gracias a delimitadores de configuración.
-  * Incluye desinstalador completo con `--uninstall`.
-* 📦 **Cero dependencias externas:** Funciona únicamente con la biblioteca estándar de Python 3. No requiere `pip`, no instala paquetes pesados y corre en servidores mínimos.
+- **Terminal Environment Standardization:** Exports `TERM=xterm-256color`, fixing terminal capability detection, `clear` commands, `Ctrl+L`, and full-screen text editor rendering (`nano`, `vim`, `htop`).
+- **Network-Aware Two-Line Prompt:** Dynamically resolves the primary IPv4 address and current hostname directly into the shell prompt (`\u@\h ($IP_LOCAL)`), preventing operational errors across multi-node or segmented network topologies.
+- **Enhanced History Navigation:** Binds up/down arrow keys to incremental prefix search (`history-search-backward` and `history-search-forward`).
+- **Session History Persistence:** Appends shell history concurrently across multiple active SSH sessions using `shopt -s histappend` and synchronized `PROMPT_COMMAND` execution.
+- **Built-in Aliases:** Preconfigures standard diagnostic shortcuts:
+  - `ll`: Extended listing sorted by directories first (`ls -lah --color=auto --group-directories-first`).
+  - `ports`: Active listening sockets (`sudo ss -tulpn`).
+  - `myip`: Compact network interface status (`ip -br a`).
+  - `cls`: Clear terminal buffer (`clear`).
+- **Zero External Dependencies:** Built strictly using Python 3 standard library modules (`os`, `sys`, `shutil`, `subprocess`, `argparse`). Compatible with fresh cloud instances without requiring `pip` or virtual environments.
+- **Idempotent and Reversible:** Backs up `~/.bashrc` prior to execution, isolates additions using explicit delimiter blocks, and supports clean rollbacks via `--uninstall`.
 
 ---
 
-## ⚡ Instalación Rápida (1 solo comando)
+## Installation and Usage
 
-### Opción A: Ejecución Directa con `curl` (Sin clonar repositorio)
-Puedes ejecutar el asistente directamente en cualquier servidor Linux remoto:
+### Direct Execution via curl
+
+Execute remotely without manual cloning:
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/KyyroxxX/pretty-ssh/main/pretty_ssh.py | python3
 ```
 
-O especificando el nombre del host directamente:
+Specify a corporate hostname during deployment:
+
 ```bash
 curl -sSL https://raw.githubusercontent.com/KyyroxxX/pretty-ssh/main/pretty_ssh.py | python3 - -n wr-wazuh
 ```
 
 ---
 
-### Opción B: Ejecución Local en el Servidor
+### Local Execution
 
-1. **Descarga el script:**
+1. Clone or download the script:
    ```bash
    wget -O pretty_ssh.py https://raw.githubusercontent.com/KyyroxxX/pretty-ssh/main/pretty_ssh.py
    chmod +x pretty_ssh.py
    ```
 
-2. **Ejecuta el asistente interactivo:**
+2. Run the interactive installer:
    ```bash
    python3 pretty_ssh.py
    ```
 
-3. **Aplica los cambios en tu sesión actual:**
+3. Reload the shell environment:
    ```bash
    source ~/.bashrc
    ```
-   *(O ejecuta `exec bash`)*.
 
 ---
 
-## 🎨 Opciones y Temas Disponibles
+## Available Themes
 
-Puedes elegir entre varios esquemas de color optimizados para pantallas oscuras:
-
-| Tema | Flag | Descripción |
+| Theme | Flag | Description |
 |---|---|---|
-| **Cyber (Default)** | `-t cyber` | Azul cian vibrante, naranja corporativo y verde primavera. |
-| **Dracula** | `-t dracula` | Púrpura pastel, rosa vampiro y verde esmeralda. |
-| **Matrix** | `-t matrix` | Verde bosque, verde terminal clásico y lima brillante. |
-| **Nord** | `-t nord` | Azul ártico, blanco hielo y tonos nórdicos relajantes. |
-
-### Ejemplos de uso CLI:
-
-```bash
-# Cambiar el nombre del servidor a wr-nginx y usar tema Matrix:
-python3 pretty_ssh.py -n wr-nginx -t matrix
-
-# Usar tema Dracula en wr-data:
-python3 pretty_ssh.py -n wr-data -t dracula
-
-# Desinstalar y restaurar ~/.bashrc original:
-python3 pretty_ssh.py --uninstall
-
-# Modo silencioso para scripts de automatización / cloud-init:
-python3 pretty_ssh.py -n wr-app -q
-```
+| **Cyber (Default)** | `-t cyber` | Cyan frame, orange host identifier, green working directory. |
+| **Dracula** | `-t dracula` | Purple frame, pink user identifier, cyan working directory. |
+| **Matrix** | `-t matrix` | Forest green frame, emerald user identifier, lime working directory. |
+| **Nord** | `-t nord` | Frost blue frame, ice white user identifier, sage working directory. |
 
 ---
 
-## 🛠️ Opciones de Línea de Comandos
+## Command-Line Arguments
 
 ```text
 usage: pretty_ssh.py [-h] [-n HOSTNAME] [-t {cyber,dracula,matrix,nord}] [-u] [-q]
 
-PrettySSH — Cloud & DevSecOps SSH Terminal Enhancer
+PrettySSH - Cloud & DevSecOps SSH Terminal Enhancer
 
 options:
-  -h, --help            Muestra este mensaje de ayuda y sale.
+  -h, --help            Show this help message and exit.
   -n HOSTNAME, --hostname HOSTNAME
-                        Nombre corporativo a fijar para el servidor (ej: wr-wazuh, wr-nginx).
+                        Set system hostname via hostnamectl and /etc/hosts.
   -t {cyber,dracula,matrix,nord}, --theme {cyber,dracula,matrix,nord}
-                        Tema de color para el prompt (por defecto: cyber).
-  -u, --uninstall       Desinstala PrettySSH y restaura ~/.bashrc al estado previo.
-  -q, --quiet           Modo silencioso (sin banner ASCII).
+                        Select ANSI color palette (default: cyber).
+  -u, --uninstall       Remove configuration block and restore original ~/.bashrc.
+  -q, --quiet           Suppress console banner output.
 ```
 
 ---
 
-## 📄 Licencia
+## License
 
-Este proyecto está distribuido bajo la licencia **MIT**. Eres libre de usarlo, modificarlo y distribuirlo libremente en proyectos personales, académicos y comerciales.
-
-Desarrollado con ❤️ por **k1r0x**.
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.

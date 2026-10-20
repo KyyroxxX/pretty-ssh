@@ -110,7 +110,7 @@ def generate_bashrc_block(theme_key="cyber"):
     
     block = f"""{MARKER_BEGIN}
 # ==========================================================
-# 🚀 PrettySSH - Cloud & DevSecOps Enhanced Terminal
+# PrettySSH - Cloud & DevSecOps Enhanced Terminal
 # Configured on: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 # Theme: {t['name']}
 # ==========================================================
